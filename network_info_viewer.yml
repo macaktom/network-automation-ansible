@@ -1,0 +1,328 @@
+---
+- name: Show device basic facts
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - facts
+  tasks:
+    - block:
+      - name: Get device basic facts
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: facts
+        register: result
+
+      - name: Print facts data
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+
+- name: Show device running configuration
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - run_conf
+  vars:
+    commands:
+      juniper: [show conf]
+      cisco: [show run]
+  tasks:
+    - block:
+      - name: Get device running configuration
+        napalm_cli:
+          provider: "{{ napalm_provider }}"
+          args:
+            commands: "{{ commands[vendor] }}"
+        register: result
+
+      - name: Print running configuration
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: vendor in commands
+
+- name: Show HW usage
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - hw
+  tasks:
+    - block:
+      - name: Get HW usage
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: environment
+        register: result
+
+      - name: Print HW usage
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: image != "olive"
+
+- name: Show interfaces basic info
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - int_basic
+  tasks:
+    - block:
+      - name: Get interfaces basic info
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: interfaces
+        register: result
+
+      - name: Print interfaces basic info
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+
+- name: Show IP addresses assigned to interfaces
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - int_ip
+  tasks:
+    - block:
+      - name: Get IP addresses assigned to interfaces
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: interfaces_ip
+        register: result
+
+      - name: Print IP addresses assigned to interfaces
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+
+- name: Show interfaces packet counters
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - packet_counters
+  tasks:
+    - block:
+      - name: Get interfaces packet counters
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: interfaces_counters
+        register: result
+
+      - name: Print interfaces packet counters
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+
+- name: Show NTP info (servers, peers, statistics)
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - ntp
+  tasks:
+    - block:
+      - name: Get NTP info (servers, peers, statistics)
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: ntp_servers,ntp_peers,ntp_stats
+        register: result
+
+      - name: Print NTP info (servers, peers, statistics)
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+
+- name: Show SNMP info
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - snmp
+  tasks:
+    - block:
+      - name: Get SNMP info
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: snmp_information
+        register: result
+
+      - name: Print SNMP info
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+
+- name: Show created users on device
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags:
+    - users
+  tasks:
+    - block:
+      - name: Get created users on device
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: users
+        register: result
+
+      - name: Print created users on device
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: image != "olive"
+
+- name: Show configured VLANs
+  hosts: cisco_switches
+  connection: local
+  gather_facts: no
+  tags:
+    - vlan
+  tasks:
+    - block:
+      - name: Get configured VLANs
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: vlans
+        register: result
+
+      - name: Print configured VLANs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+
+- name: Show OSPFv2 neighbors
+  hosts: routers, cisco_l3_switches
+  connection: local
+  gather_facts: no
+  tags:
+    - ospfv2
+  vars:
+    commands:
+      juniper: [show ospf neighbor]
+      cisco: [show ip ospf neighbor]
+  tasks:
+    - block:
+      - name: Get OSPFv2 neighbors
+        napalm_cli:
+          provider: "{{ napalm_provider }}"
+          args:
+            commands: "{{ commands[vendor] }}"
+        register: result
+
+      - name: Print OSPFv2 neighbors
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: vendor in commands
+
+- name: Show OSPFv3 neighbors
+  hosts: routers
+  connection: local
+  gather_facts: no
+  tags:
+    - ospfv3
+  vars:
+    commands:
+      juniper: [show ospf3 neighbor]
+      cisco: [show ipv6 ospf neighbor]
+  tasks:
+    - block:
+      - name: Get OSPFv3 neighbors
+        napalm_cli:
+          provider: "{{ napalm_provider }}"
+          args:
+            commands: "{{ commands[vendor] }}"
+        register: result
+
+      - name: Print OSPFv3 neighbors
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: vendor in commands
+
+- name: Show IPv4 routes
+  hosts: routers, cisco_l3_switches
+  connection: local
+  gather_facts: no
+  tags:
+    - ipv4_routes
+    - ip_routes
+  vars:
+    commands:
+      juniper: [show route]
+      cisco: [show ip route]
+  tasks:
+    - name: Get IPv4 routes
+      napalm_cli:
+        provider: "{{ napalm_provider }}"
+        args:
+          commands: "{{ commands[vendor] }}"
+      register: result
+      when: vendor in commands
+
+    - name: Parse juniper IPv4 routes
+      set_fact:
+        result: "{{ result['cli_results']['show route'].split('inet6.0:')[0] }}"
+      when: vendor == 'juniper' and 'inet6.0' in result['cli_results']['show route']
+
+    - name: Print IPv4 routes
+      debug:
+        msg: "{{ result | to_nice_yaml }}"
+
+- name: Show IPv6 routes
+  hosts: routers, cisco_l3_switches
+  connection: local
+  gather_facts: no
+  tags:
+    - ipv6_routes
+    - ip_routes
+  vars:
+    commands:
+      juniper: [show route]
+      cisco: [show ipv6 route]
+  tasks:
+    - name: Get IPv6 routes
+      napalm_cli:
+        provider: "{{ napalm_provider }}"
+        args:
+          commands: "{{ commands[vendor] }}"
+      register: result
+      when: vendor in commands
+
+    - name: Parse dictionary - juniper
+      set_fact:
+        result: "{{ result['cli_results']['show route'] }}"
+      when: vendor == 'juniper'
+
+    - name: Set no IPv6 routes parameter - juniper
+      set_fact:
+        result: "No IPv6 route found."
+      when: vendor == 'juniper' and 'inet6.0' not in result and 'inet.0' in result
+
+    - name: Parse juniper IPv6 routes
+      set_fact:
+        result: "{{ 'inet6.0:' + result.split('inet6.0:')[1] }}"
+      when: vendor == 'juniper' and 'inet6.0' in result
+
+    - name: Print IPv6 routes
+      debug:
+        msg: "{{ result | to_nice_yaml }}"
+
+- name: Show packet filters info
+  hosts: routers, cisco_l3_switches
+  connection: local
+  gather_facts: no
+  tags:
+    - packet_filters
+    - acl
+  vars:
+    commands:
+      juniper: [show configuration firewall]
+      cisco: [show access-lists]
+  tasks:
+    - name: Get packet filters info
+      napalm_cli:
+        provider: "{{ napalm_provider }}"
+        args:
+          commands: "{{ commands[vendor] }}"
+      register: result
+    when: vendor in commands
+
+    - name: Print packet filters info
+      debug:
+        msg: "{{ result | to_nice_yaml }}"

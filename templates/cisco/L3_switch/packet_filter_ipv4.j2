@@ -1,0 +1,15 @@
+{% if packet_filter_config is defined %}
+{% for acl_name, acl_dict in packet_filter_config.items() %}
+ip access-list {{ acl_dict.type }} {{ acl_name }}
+{% for rule in acl_dict.rules %}
+ {{ rule | trim }}
+{% endfor %}
+!
+{% for interface in acl_dict.routed_interfaces %}
+interface {{ interface.name }}
+ ip access-group {{ acl_name }} {{ interface.acl_direction }}
+!
+{% endfor %}
+{% endfor %}
+end
+{% endif %}

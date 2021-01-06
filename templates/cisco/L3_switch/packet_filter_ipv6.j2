@@ -1,0 +1,16 @@
+{% if packet_filter_ipv6_config is defined %}
+{% for acl_name, acl_dict in packet_filter_ipv6_config.items() %}
+ipv6 access-list {{ acl_name }}
+{% for rule in acl_dict.rules %}
+ {{ rule | trim }}
+{% endfor %}
+!
+{% for interface in acl_dict.routed_interfaces %}
+interface {{ interface.name }}
+ ipv6 enable
+ ipv6 traffic-filter {{ acl_name }} {{ interface.acl_direction }}
+!
+{% endfor %}
+{% endfor %}
+end
+{% endif %}
