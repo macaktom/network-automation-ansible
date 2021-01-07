@@ -23,23 +23,17 @@
   gather_facts: no
   tags:
     - run_conf
-  vars:
-    commands:
-      juniper: [show conf]
-      cisco: [show run]
   tasks:
     - block:
       - name: Get device running configuration
-        napalm_cli:
+        napalm_get_facts:
           provider: "{{ napalm_provider }}"
-          args:
-            commands: "{{ commands[vendor] }}"
+          filter: config
         register: result
 
       - name: Print running configuration
         debug:
-          msg: "{{ result | to_nice_yaml }}"
-      when: vendor in commands
+          msg: "{{ result['ansible_facts']['napalm_config']['running'] | to_nice_yaml }}"
 
 - name: Show HW usage
   hosts: network_devices
@@ -321,7 +315,7 @@
         args:
           commands: "{{ commands[vendor] }}"
       register: result
-    when: vendor in commands
+      when: vendor in commands
 
     - name: Print packet filters info
       debug:

@@ -1,0 +1,28 @@
+---
+- name: Backup network device configuration
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  vars:
+    backups_folder: 'backups/{{inventory_hostname}}'
+  tasks:
+    - block:
+      - name: Get timestamp from local system
+        shell: "date +%Y-%m-%d%H-%M-%S"
+        register: tstamp
+
+      - name: Get device running configuration
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: config
+        register: result
+
+      - name: Create folders for backups
+        file:
+          path: "{{ backups_folder }}"
+          state: directory
+
+      - name: Write content to backups folder
+        copy:
+          content: "{{ result['ansible_facts']['napalm_config']['running'] }}"
+          dest: '{{ backups_folder }}/{{ inventory_hostname }}_{{ tstamp.stdout[0:10] }}.conf'
