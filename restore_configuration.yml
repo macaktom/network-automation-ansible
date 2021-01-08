@@ -1,0 +1,27 @@
+---
+- name: Restore network device configuration
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  vars:
+    backups_folder: 'backups/{{inventory_hostname}}'
+    commit_config: true
+  tasks:
+    - block:
+      - name: Set no conf commit variable (enable testing mode)
+        set_fact:
+          commit_config: false
+        when: ansible_check_mode
+
+      - name: Load and commit configuration
+        napalm_install_config:
+          provider: "{{ napalm_provider }}"
+          config_file: '{{ backups_folder }}/{{ inventory_hostname }}_{{ restore_config.running_config_date }}.conf'
+          replace_config: true
+          commit_changes: "{{ commit_config }}"
+        register: result
+
+      - name: Print differences in configs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: restore_config is defined and restore_config.running_config_date is defined

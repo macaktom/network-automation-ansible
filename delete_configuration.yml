@@ -1,0 +1,47 @@
+---
+- name: Deletion of network devices configuration
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  vars:
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    staging_delete_folder: 'files/staging/delete'
+    parsed_delete_commands_files: '{{ staging_delete_folder }}/{{ inventory_hostname }}.txt'
+    commit_config: true
+  tasks:
+    - block:
+      - name: Create folders for parsed delete commands
+        file:
+          path: "{{ staging_delete_folder }}"
+          state: directory
+        check_mode: no
+
+      - name: Set no conf commit variable (enable testing mode)
+        set_fact:
+          commit_config: false
+        when: ansible_check_mode
+
+      - name: Parse delete_configuration template
+        template:
+          src: '{{ templates_folder }}/delete_configuration.j2'
+          dest: '{{ parsed_delete_commands_files }}'
+        check_mode: no
+
+      - name: Load and commit configuration
+        napalm_install_config:
+          provider: "{{ napalm_provider }}"
+          config_file: '{{ parsed_delete_commands_files }}'
+          replace_config: false
+          commit_changes: "{{ commit_config }}"
+        register: result
+
+      - name: Clean temporary folders/files
+        file:
+          state: absent
+          path: "{{ staging_delete_folder }}"
+        check_mode: no
+
+      - name: Print differences in configs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: delete_config is defined

@@ -1,4 +1,4 @@
-{% if host.vsftpd_config is defined %}
+{% if vsftpd_config is defined %}
 listen=NO
 listen_ipv6=YES
 anonymous_enable=NO
@@ -20,9 +20,9 @@ local_root=/home/$USER/ftp
 userlist_enable=YES
 userlist_file=/etc/vsftpduserlist.conf
 userlist_deny=NO
-{% if host.vsftpd_config.ssl is defined and  host.vsftpd_config.ssl.enabled %}
-rsa_cert_file={{ host.vsftpd_config.ssl.rsa_cert_file }}
-rsa_private_key_file={{ host.vsftpd_config.ssl.rsa_private_key_file }}
+{% if vsftpd_config.ssl is defined and  vsftpd_config.ssl.enabled %}
+rsa_cert_file={{ vsftpd_config.ssl.rsa_cert_file }}
+rsa_private_key_file={{ vsftpd_config.ssl.rsa_private_key_file }}
 ssl_enable=YES
 allow_anon_ssl=NO
 force_local_data_ssl=YES

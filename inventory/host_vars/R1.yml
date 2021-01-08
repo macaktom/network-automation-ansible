@@ -1,5 +1,6 @@
 ---
 vendor: cisco
+dev_type: router
 image: "c7200"
 interfaces_ipv4:
   Loopback0:
@@ -168,7 +169,7 @@ packet_filter_ipv6_config: # Named ACL konfigurace - IPv6
             - name: FastEthernet0/0
               acl_direction: in
 restore_config:
-    running_config_date: 2020-12-20
+    running_config_date: 2021-01-08
 delete_config:
     interfaces: # routované porty
         virtual: [Loopback0] # úplné vymázání virtuálních síťových rozhraní

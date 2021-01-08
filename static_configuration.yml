@@ -1,0 +1,95 @@
+- name: IPv4 Static routing configuration
+  hosts: routers, cisco_l3
+  connection: local
+  gather_facts: no
+  tags: ipv4
+  vars:
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    staging_static_routing_folder: 'files/staging/static_routing'
+    parsed_static_routing_configuration_file: '{{ staging_static_routing_folder }}/{{ inventory_hostname }}.conf'
+    commit_config: true
+  tasks:
+    - block:
+      - name: Create folders for parsed static routing configuration
+        file:
+          path: "{{ staging_static_routing_folder }}"
+          state: directory
+        check_mode: no
+
+      - name: Set no conf commit variable (enable testing mode)
+        set_fact:
+          commit_config: false
+        when: ansible_check_mode
+
+      - name: Parse static_ipv4 template
+        template:
+          src: '{{ templates_folder }}/static_ipv4.j2'
+          dest: '{{ parsed_static_routing_configuration_file }}'
+        check_mode: no
+
+      - name: Load and commit configuration
+        napalm_install_config:
+          provider: "{{ napalm_provider }}"
+          config_file: '{{ parsed_static_routing_configuration_file }}'
+          replace_config: false
+          commit_changes: "{{ commit_config }}"
+        register: result
+
+      - name: Clean temporary folders/files
+        file:
+          state: absent
+          path: "{{ staging_static_routing_folder }}"
+        check_mode: no
+
+      - name: Print differences in configs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: static_routing_config is defined
+
+- name: IPv6 Static routing configuration
+  hosts: routers, cisco_l3
+  connection: local
+  gather_facts: no
+  tags: ipv6
+  vars:
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    staging_static_routing_folder: 'files/staging/static_routing'
+    parsed_static_routing_configuration_file: '{{ staging_static_routing_folder }}/{{ inventory_hostname }}.conf'
+    commit_config: true
+  tasks:
+    - block:
+      - name: Create folders for parsed static routing configuration
+        file:
+          path: "{{ staging_static_routing_folder }}"
+          state: directory
+        check_mode: no
+
+      - name: Set no conf commit variable (enable testing mode)
+        set_fact:
+          commit_config: false
+        when: ansible_check_mode
+
+      - name: Parse static_ipv6 template
+        template:
+          src: '{{ templates_folder }}/static_ipv6.j2'
+          dest: '{{ parsed_static_routing_configuration_file }}'
+        check_mode: no
+
+      - name: Load and commit configuration
+        napalm_install_config:
+          provider: "{{ napalm_provider }}"
+          config_file: '{{ parsed_static_routing_configuration_file }}'
+          replace_config: false
+          commit_changes: "{{ commit_config }}"
+        register: result
+
+      - name: Clean temporary folders/files
+        file:
+          state: absent
+          path: "{{ staging_static_routing_folder }}"
+        check_mode: no
+
+      - name: Print differences in configs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: static_routing_ipv6_config is defined

@@ -1,5 +1,6 @@
 ---
 vendor: cisco
+dev_type: L3_switch
 image: "IOSvL2"
 vlans_config:
   - number: 10
@@ -165,7 +166,7 @@ packet_filter_ipv6_config: # Named ACL konfigurace - IPv6, lze pouze u ROUTED (n
           - name: GigabitEthernet1/2
             acl_direction: in
 restore_config:
-  running_config_date: 2020-12-20
+  running_config_date: 2021-01-08
 delete_config:
   interfaces:
       virtual: [Vlan10, Loopback0] # úplné vymázání virtuálních síťových rozhraní

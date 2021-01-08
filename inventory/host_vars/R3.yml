@@ -1,5 +1,6 @@
 ---
 vendor: juniper
+dev_type: router
 image: "olive"
 interfaces_ipv4:
   lo0:
@@ -137,7 +138,7 @@ packet_filter_ipv6_config:
             unit_number: 1
             filter_direction: output
 restore_config:
-  running_config_date: 2020-12-27
+  running_config_date: 2021-01-08
 delete_config:
   interfaces:
       lo0:
