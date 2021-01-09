@@ -4,7 +4,7 @@
   connection: local
   gather_facts: no
   vars:
-    backups_folder: 'backups/{{inventory_hostname}}'
+    backups_folder: 'files/backups/{{inventory_hostname}}'
   tasks:
     - block:
       - name: Get timestamp from local system

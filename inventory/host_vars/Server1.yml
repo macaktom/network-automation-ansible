@@ -1,6 +1,18 @@
 ---
-commands: ["pwd", "ls"]
+vendor: debian
+dev_type: ubuntu_server
 vsftpd_config:
+  vsftpd_user:
+    name: ftpuser
+    state: present
+    group: primary-group
+    groups: {{}},sudo
+    shell: /bin/bash
+    home: '/home/{{ vsftpd_config.vsftpd_user.name }}'
+    password: ftpuser
+
+
+
   # (S)FTP konfigurace - vsftpd, nutné mít vytvořeného FTP usera (v mém případě ftpuser) a v případě SSL vygenerovaný certifikát
   # V případě SSL je nutné mít předem vygenerovaný certifikát (např. self-signed). Předem jsem vytvořil složku /etc/certs.
   # Self-signed certifikat: sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/certs/vsftpd.pem -out /etc/certs/vsftpd.pem

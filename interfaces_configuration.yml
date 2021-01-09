@@ -1,0 +1,143 @@
+- name: IPv4 interfaces configuration
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags: ipv4
+  vars:
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    staging_interfaces_folder: 'files/staging/interfaces'
+    parsed_interfaces_configuration_file: '{{ staging_interfaces_folder }}/{{ inventory_hostname }}.conf'
+    commit_config: true
+  tasks:
+    - block:
+      - name: Create folders for parsed interfaces configuration
+        file:
+          path: "{{ staging_interfaces_folder }}"
+          state: directory
+        check_mode: no
+
+      - name: Set no conf commit variable (enable testing mode)
+        set_fact:
+          commit_config: false
+        when: ansible_check_mode
+
+      - name: Parse interfaces_ipv4 template
+        template:
+          src: '{{ templates_folder }}/interfaces_ipv4.j2'
+          dest: '{{ parsed_interfaces_configuration_file }}'
+        check_mode: no
+
+      - name: Load and commit configuration
+        napalm_install_config:
+          provider: "{{ napalm_provider }}"
+          config_file: '{{ parsed_interfaces_configuration_file }}'
+          replace_config: false
+          commit_changes: "{{ commit_config }}"
+        register: result
+
+      - name: Clean temporary folders/files
+        file:
+          state: absent
+          path: "{{ staging_interfaces_folder }}"
+        check_mode: no
+
+      - name: Print differences in configs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: interfaces_ipv4 is defined
+
+- name: IPv6 interfaces configuration
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags: ipv6
+  vars:
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    staging_interfaces_folder: 'files/staging/interfaces'
+    parsed_interfaces_configuration_file: '{{ staging_interfaces_folder }}/{{ inventory_hostname }}.conf'
+    commit_config: true
+  tasks:
+    - block:
+      - name: Create folders for parsed interfaces configuration
+        file:
+          path: "{{ staging_interfaces_folder }}"
+          state: directory
+        check_mode: no
+
+      - name: Set no conf commit variable (enable testing mode)
+        set_fact:
+          commit_config: false
+        when: ansible_check_mode
+
+      - name: Parse interfaces_ipv6 template
+        template:
+          src: '{{ templates_folder }}/interfaces_ipv6.j2'
+          dest: '{{ parsed_interfaces_configuration_file }}'
+        check_mode: no
+
+      - name: Load and commit configuration
+        napalm_install_config:
+          provider: "{{ napalm_provider }}"
+          config_file: '{{ parsed_interfaces_configuration_file }}'
+          replace_config: false
+          commit_changes: "{{ commit_config }}"
+        register: result
+
+      - name: Clean temporary folders/files
+        file:
+          state: absent
+          path: "{{ staging_interfaces_folder }}"
+        check_mode: no
+
+      - name: Print differences in configs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: interfaces_ipv6 is defined
+
+- name: Switching interfaces configuration
+  hosts: cisco_switches
+  connection: local
+  gather_facts: no
+  tags: switching
+  vars:
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    staging_switching_interfaces_folder: 'files/staging/interfaces'
+    parsed_switching_interfaces_configuration_file: '{{ staging_switching_interfaces_folder }}/{{ inventory_hostname }}.conf'
+    commit_config: true
+  tasks:
+    - block:
+      - name: Create folders for parsed switching interfaces configuration
+        file:
+          path: "{{ staging_switching_interfaces_folder }}"
+          state: directory
+        check_mode: no
+
+      - name: Set no conf commit variable (enable testing mode)
+        set_fact:
+          commit_config: false
+        when: ansible_check_mode
+
+      - name: Parse switching_interfaces template
+        template:
+          src: '{{ templates_folder }}/switching_interfaces.j2'
+          dest: '{{ parsed_switching_interfaces_configuration_file }}'
+        check_mode: no
+
+      - name: Load and commit configuration
+        napalm_install_config:
+          provider: "{{ napalm_provider }}"
+          config_file: '{{ parsed_switching_interfaces_configuration_file }}'
+          replace_config: false
+          commit_changes: "{{ commit_config }}"
+        register: result
+
+      - name: Clean temporary folders/files
+        file:
+          state: absent
+          path: "{{ staging_switching_interfaces_folder }}"
+        check_mode: no
+
+      - name: Print differences in configs
+        debug:
+          msg: "{{ result | to_nice_yaml }}"
+      when: vlans_config is defined and switching_interfaces is defined

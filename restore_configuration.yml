@@ -4,7 +4,7 @@
   connection: local
   gather_facts: no
   vars:
-    backups_folder: 'backups/{{inventory_hostname}}'
+    backups_folder: 'files/backups/{{inventory_hostname}}'
     commit_config: true
   tasks:
     - block:

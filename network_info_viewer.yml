@@ -240,6 +240,8 @@
     commands:
       juniper: [show route]
       cisco: [show ip route]
+    ipv6_pattern: "inet6.0:"
+    ipv4_pattern: "inet.0"
   tasks:
     - name: Get IPv4 routes
       napalm_cli:
@@ -249,10 +251,19 @@
       register: result
       when: vendor in commands
 
+    - name: Access result of command
+      set_fact:
+        result: "{{ result['cli_results'][commands[vendor][0]] | trim }}"
+
+    - name: Set no IPv4 routes parameter - juniper
+      set_fact:
+        result: "No IPv4 routes were found."
+      when: vendor == 'juniper' and ipv4_pattern not in result
+
     - name: Parse juniper IPv4 routes
       set_fact:
-        result: "{{ result['cli_results']['show route'].split('inet6.0:')[0] }}"
-      when: vendor == 'juniper' and 'inet6.0' in result['cli_results']['show route']
+        result: "{{ result.split(ipv6_pattern)[0] }}"
+      when: vendor == 'juniper' and ipv6_pattern in result
 
     - name: Print IPv4 routes
       debug:
@@ -269,6 +280,8 @@
     commands:
       juniper: [show route]
       cisco: [show ipv6 route]
+    ipv6_pattern: "inet6.0:"
+    ipv4_pattern: "inet.0"
   tasks:
     - name: Get IPv6 routes
       napalm_cli:
@@ -278,20 +291,19 @@
       register: result
       when: vendor in commands
 
-    - name: Parse dictionary - juniper
+    - name: Access result of command
       set_fact:
-        result: "{{ result['cli_results']['show route'] }}"
-      when: vendor == 'juniper'
+        result: "{{ result['cli_results'][commands[vendor][0]] | trim }}"
 
     - name: Set no IPv6 routes parameter - juniper
       set_fact:
-        result: "No IPv6 route found."
-      when: vendor == 'juniper' and 'inet6.0' not in result and 'inet.0' in result
+        result: "No IPv6 routes were found."
+      when: vendor == 'juniper' and ipv6_pattern not in result
 
     - name: Parse juniper IPv6 routes
       set_fact:
-        result: "{{ 'inet6.0:' + result.split('inet6.0:')[1] }}"
-      when: vendor == 'juniper' and 'inet6.0' in result
+        result: "{{ ipv6_pattern + result.split(ipv6_pattern)[1] }}"
+      when: vendor == 'juniper' and ipv6_pattern in result
 
     - name: Print IPv6 routes
       debug:

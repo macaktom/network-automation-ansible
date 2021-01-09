@@ -1,0 +1,161 @@
+---
+- name: Export device configuration
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  vars:
+    export_running_conf_folder: 'files/export/running_configuration'
+  tags: run_conf
+  tasks:
+    - block:
+      - name: Get device running configuration
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: config
+        register: result
+
+      - name: Create folders for exports
+        file:
+          path: "{{ export_running_conf_folder }}"
+          state: directory
+
+      - name: Write content to export folder
+        copy:
+          content: "{{ result['ansible_facts']['napalm_config']['running'] }}"
+          dest: '{{ export_running_conf_folder }}/{{ inventory_hostname }}.conf'
+
+- name: Export IPv4 routes
+  hosts: routers, cisco_l3_switches
+  connection: local
+  gather_facts: no
+  vars:
+    export_ip_routes_folder: 'files/export/ip_routes'
+    commands:
+      juniper: [ show route ]
+      cisco: [ show ip route ]
+    ipv6_pattern: "inet6.0:"
+    ipv4_pattern: "inet.0"
+  tags:
+    - ipv4_routes
+    - ip_routes
+  tasks:
+    - block:
+      - name: Get IPv4 routes
+        napalm_cli:
+          provider: "{{ napalm_provider }}"
+          args:
+            commands: "{{ commands[vendor] }}"
+        register: result
+
+      - name: Access result of command
+        set_fact:
+          result: "{{ result['cli_results'][commands[vendor][0]] | trim }}"
+
+      - name: Set no IPv4 routes parameter - juniper
+        set_fact:
+          result: ""
+        when: vendor == 'juniper' and ipv4_pattern not in result
+
+      - name: Parse juniper IPv4 routes
+        set_fact:
+          result: "{{ result.split(ipv6_pattern)[0] }}"
+        when: vendor == 'juniper' and ipv6_pattern in result
+
+      - name: Create folders for exports
+        file:
+          path: "{{ export_ip_routes_folder }}"
+          state: directory
+
+      - name: Write content to export folder
+        copy:
+          content: "{{ result }}"
+          dest: '{{ export_ip_routes_folder }}/{{ inventory_hostname }}_ipv4.txt'
+        when: result != ""
+      when: vendor in commands
+
+
+- name: Export IPv6 routes
+  hosts: routers, cisco_l3_switches
+  connection: local
+  gather_facts: no
+  vars:
+    export_ip_routes_folder: 'files/export/ip_routes'
+    commands:
+      juniper: [ show route ]
+      cisco: [ show ipv6 route ]
+    ipv6_pattern: "inet6.0:"
+    ipv4_pattern: "inet.0"
+  tags:
+    - ipv6_routes
+    - ip_routes
+  tasks:
+    - block:
+      - name: Get IPv6 routes
+        napalm_cli:
+          provider: "{{ napalm_provider }}"
+          args:
+            commands: "{{ commands[vendor] }}"
+        register: result
+
+      - name: Access result of command
+        set_fact:
+          result: "{{ result['cli_results'][commands[vendor][0]] | trim }}"
+
+      - name: Set no IPv6 routes parameter - juniper
+        set_fact:
+          result: ""
+        when: vendor == 'juniper' and ipv6_pattern not in result
+
+      - name: Parse juniper IPv6 routes
+        set_fact:
+          result: "{{ ipv6_pattern + result.split(ipv6_pattern)[1] }}"
+        when: vendor == 'juniper' and ipv6_pattern in result
+
+      - name: Create folders for exports
+        file:
+          path: "{{ export_ip_routes_folder }}"
+          state: directory
+
+      - name: Write content to export folder
+        copy:
+          content: "{{ result }}"
+          dest: '{{ export_ip_routes_folder }}/{{ inventory_hostname }}_ipv6.txt'
+        when: result != ""
+      when: vendor in commands
+
+- name: Export packet filters info
+  hosts: routers, cisco_l3_switches
+  connection: local
+  gather_facts: no
+  vars:
+    export_packet_filter_folder: 'files/export/packet_filter'
+    commands:
+      juniper: [show configuration firewall]
+      cisco: [show access-lists]
+  tags:
+    - packet_filters
+    - acl
+  tasks:
+    - block:
+      - name: Get packet filters info
+        napalm_cli:
+          provider: "{{ napalm_provider }}"
+          args:
+            commands: "{{ commands[vendor] }}"
+        register: result
+
+      - name: Access result of command
+        set_fact:
+          result: "{{ result['cli_results'][commands[vendor][0]] | trim }}"
+
+      - name: Create folders for exports
+        file:
+          path: "{{ export_packet_filter_folder }}"
+          state: directory
+
+      - name: Write content to export folder
+        copy:
+          content: "{{ result }}"
+          dest: '{{ export_packet_filter_folder }}/{{ inventory_hostname }}.txt'
+        when: result != ""
+      when: vendor in commands

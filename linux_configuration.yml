@@ -1,0 +1,16 @@
+---
+- hosts: ubuntu
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Create a new user
+      user: '{{ vsftpd_config.vsftpd_user }}'
+    - name: Install VSFTPD
+      apt: pkg=vsftpd state=present
+      notify:
+      - restart vsftpd
+    - name: Enable VSFTPD during boot
+      service: name=vsftpd state=started enabled=yes
+  handlers:
+    - name: restart vsftpd
+      service: name=vsftpd state=restarted

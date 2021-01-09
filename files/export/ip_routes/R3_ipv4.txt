@@ -1,0 +1,18 @@
+inet.0: 7 destinations, 7 routes (7 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+2.2.2.2/32         *[Direct/0] 05:47:34
+                    > via lo0.0
+10.10.10.0/24      *[Direct/0] 09:26:11
+                    > via em0.0
+10.10.10.4/32      *[Local/0] 09:26:11
+                      Local via em0.0
+192.168.20.0/24    *[Direct/0] 05:47:38
+                    > via em1.0
+192.168.20.1/32    *[Local/0] 05:47:38
+                      Local via em1.0
+192.168.40.0/24    *[Direct/0] 05:47:34
+                    > via em2.0
+192.168.40.1/32    *[Local/0] 05:47:34
+                      Local via em2.0
+
