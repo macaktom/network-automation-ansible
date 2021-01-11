@@ -159,3 +159,43 @@
           dest: '{{ export_packet_filter_folder }}/{{ inventory_hostname }}.txt'
         when: result != ""
       when: vendor in commands
+
+- name: Export packet counters data to HTML
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags: packets_counter
+  vars:
+    templates_folder: 'templates'
+    export_folder: 'files/export'
+    sorted_header: [ "rx_broadcast_packets", "rx_discards", "rx_errors",
+                     "rx_multicast_packets", "rx_octets", "rx_unicast_packets",
+                     "tx_discards", "tx_errors", "tx_octets", "tx_unicast_packets" ]
+  tasks:
+    - block:
+      - name: Get interfaces packet counters
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: interfaces_counters
+        register: result
+
+      - name: Access result of command
+        set_fact:
+          result: "{{ result['ansible_facts']['napalm_interfaces_counters'] }}"
+          all_hosts: "{{ play_hosts }}"
+
+      - name: Aggregate all results
+        set_fact:
+          aggregated_dict: "{{ ansible_play_hosts | map('extract', hostvars, 'result') }}"
+        run_once: yes
+
+      - name: Create folders for exports
+        file:
+          path: "{{ export_folder }}"
+          state: directory
+
+      - name: Parse packets_counter template
+        template:
+          src: '{{ templates_folder }}/packets_counter.j2'
+          dest: '{{ export_folder }}/packets_counter.html'
+        run_once: yes
