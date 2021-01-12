@@ -199,3 +199,55 @@
           src: '{{ templates_folder }}/packets_counter.j2'
           dest: '{{ export_folder }}/packets_counter.html'
         run_once: yes
+
+- name: Export devices facts to HTML
+  hosts: network_devices
+  connection: local
+  gather_facts: no
+  tags: facts
+  vars:
+    templates_folder: 'templates'
+    export_folder: 'files/export'
+    sorted_header: ["hostname", "FQDN", "vendor", "model", "serial_number", "os_version", "uptime"]
+  tasks:
+    - block:
+      - name: Get devices facts
+        napalm_get_facts:
+          provider: "{{ napalm_provider }}"
+          filter: facts
+        register: result
+
+      - name: Access result of command
+        set_fact:
+          result: "{{ result['ansible_facts']['napalm_facts'] }}"
+          all_hosts: "{{ play_hosts }}"
+
+      - name: Insert vendor value (only Olive images)
+        set_fact:
+          result: "{{ result | default({}) | combine ({ 'vendor' : vendor | title }) }}"
+        when: image == "olive"
+
+      - name: Parse os_version (only Cisco devices)
+        set_fact:
+          result: "{{ result | default({}) | combine ({ 'os_version' : result['os_version'].split(', ')[1] }) }}"
+        when: vendor == "cisco"
+
+      - name: Parse uptime
+        set_fact:
+          result: "{{ result | default({}) | combine ({ 'uptime' : '%H:%M:%S' | strftime(result['uptime'] - 3600 ) }) }}"
+
+      - name: Aggregate all results
+        set_fact:
+          aggregated_dict: "{{ ansible_play_hosts | map('extract', hostvars, 'result') }}"
+        run_once: yes
+
+      - name: Create folders for exports
+        file:
+          path: "{{ export_folder }}"
+          state: directory
+
+      - name: Parse facts template
+        template:
+          src: '{{ templates_folder }}/facts.j2'
+          dest: '{{ export_folder }}/facts.html'
+        run_once: yes

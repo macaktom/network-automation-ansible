@@ -15,7 +15,7 @@
 
       - name: Print facts data
         debug:
-          msg: "{{ result | to_nice_yaml }}"
+          msg: "{{ result['ansible_facts']['napalm_facts']  | to_nice_yaml }}"
 
 - name: Show device running configuration
   hosts: network_devices

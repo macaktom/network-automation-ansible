@@ -35,24 +35,43 @@
 <table>
 <thead>
     <tr>
-{% for header in sorted_header %}
-        <th>{{ header }}</th>
-{% endfor %}
+        <th>hostname</th>
+        <th>FQDN</th>
+        <th>vendor</th>
+        <th>model</th>
+        <th>serial_number</th>
+        <th>os_version</th>
+        <th>uptime</th>
     </tr>
 </thead>
 <tbody>
-{% for host_data in aggregated_dict %}
 <tr>
-{% for sorted_key in sorted_header %}
-{% set lowercase_key = sorted_key | lower %}
-{% set value = host_data[lowercase_key] %}
-{% if value == "None" or "" %}
-{% set value = "-" %}
-{% endif %}
-    <td>{{ value }}</td>
-{% endfor %}
+    <td>R3</td>
+    <td>R3.automation.local</td>
+    <td>Juniper</td>
+    <td>OLIVE</td>
+    <td>-</td>
+    <td>12.1R1.9</td>
+    <td>07:20:59</td>
 </tr>
-{% endfor %}
+<tr>
+    <td>R1</td>
+    <td>R1.automation.local</td>
+    <td>Cisco</td>
+    <td>7206VXR</td>
+    <td>4279256517</td>
+    <td>Version 15.2(4)S5</td>
+    <td>01:32:00</td>
+</tr>
+<tr>
+    <td>SW1</td>
+    <td>SW1.automation.local</td>
+    <td>Cisco</td>
+    <td>IOSv</td>
+    <td>9K3RW05NXRW</td>
+    <td>Version 15.2(4.0.55)E</td>
+    <td>07:20:00</td>
+</tr>
 </tbody>
 </table>
 </body>
