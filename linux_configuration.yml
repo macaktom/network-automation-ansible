@@ -1,16 +1,110 @@
 ---
-- hosts: ubuntu
-  gather_facts: yes
+- name: Setup and Configure (S)FTP server
+  hosts: ubuntu_servers
+  gather_facts: no
   become: yes
+  tags: vsftpd
+  vars:
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    vsftpd_conf_path: '/etc/vsftpd.conf'
+    vsftpd_userlist_path: '/etc/vsftpduserlist.conf'
+    certs_folder_path: '/etc/certs'
   tasks:
-    - name: Create a new user
-      user: '{{ vsftpd_config.vsftpd_user }}'
+    - name: Ensure FTP group exists
+      group:
+        name: "{{ vsftpd_config.vsftpd_user.name }}"
+        state: present
+
+    - name: Create FTP user
+      user:
+        name: "{{ vsftpd_config.vsftpd_user.name }}"
+        state: present
+        group: "{{ vsftpd_config.vsftpd_user.name }}"
+        groups: "{{ vsftpd_config.vsftpd_user.groups }}"
+        shell: /bin/bash
+        home: "{{ vsftpd_config.vsftpd_user.home }}"
+        password: "{{ vsftpd_config.vsftpd_user.password }}"
+        update_password: on_create
+
     - name: Install VSFTPD
-      apt: pkg=vsftpd state=present
-      notify:
-      - restart vsftpd
+      apt:
+        pkg: vsftpd
+        state: present
+
     - name: Enable VSFTPD during boot
-      service: name=vsftpd state=started enabled=yes
+      service:
+        name: vsftpd
+        state: started
+        enabled: yes
+
+    - block:
+      - name: Create certs directory
+        file:
+          path: "{{ certs_folder_path }}"
+          state: directory
+          owner: root
+          group: root
+          mode: '0755'
+
+      - name: Generate an OpenSSL private key.
+        openssl_privatekey:
+          path: "{{ vsftpd_config.ssl.private_key_file }}"
+
+      - name: Generate an OpenSSL CSR.
+        openssl_csr:
+          path: "{{ vsftpd_config.ssl.openssl_csr }}"
+          privatekey_path: "{{ vsftpd_config.ssl.private_key_file }}"
+          common_name: "{{ vsftpd_config.ssl.cn }}"
+
+      - name: Generate a Self Signed OpenSSL certificate.
+        openssl_certificate:
+          path: "{{ vsftpd_config.ssl.cert_file }}"
+          privatekey_path: "{{ vsftpd_config.ssl.private_key_file }}"
+          csr_path: "{{ vsftpd_config.ssl.openssl_csr }}"
+          provider: selfsigned
+      when: vsftpd_config.ssl is defined and vsftpd_config.ssl.enabled
+
+    - name: Create base FTP directory
+      file:
+        path: '/home/{{ vsftpd_config.vsftpd_user.name }}/ftp'
+        state: directory
+        owner: nobody
+        group: nogroup
+        mode: '0555'
+
+    - name: Create test FTP directory (for ftp users)
+      file:
+        path: '/home/{{ vsftpd_config.vsftpd_user.name }}/ftp/test'
+        state: directory
+        owner: '{{ vsftpd_config.vsftpd_user.name }}'
+        group: '{{ vsftpd_config.vsftpd_user.name }}'
+        mode: '0755'
+
+    - name: Parse vsftpd template
+      template:
+        src: '{{ templates_folder }}/vsftpd.j2'
+        dest: '{{ vsftpd_conf_path }}'
+        owner: root
+        group: root
+        mode: 0644
+        force: yes
+      notify:
+        - restart vsftpd
+
+    - name: Create VSFTPD userlist
+      copy:
+        dest: '{{ vsftpd_userlist_path }}'
+        owner: root
+        group: root
+        mode: 0644
+        force: yes
+        content: |
+          {{ vsftpd_config.vsftpd_user.name }}
+      notify:
+        - restart vsftpd
+
   handlers:
     - name: restart vsftpd
-      service: name=vsftpd state=restarted
+      service:
+        name: vsftpd
+        state: restarted

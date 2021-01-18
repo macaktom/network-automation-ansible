@@ -1,0 +1,13 @@
+---
+ansible_python_interpreter: ~/.local/share/virtualenvs/network_automation_ansible-jyRQ_HBH/bin/python
+ansible_network_os: ios
+ansible_connection: network_cli
+ansible_user: admin
+ansible_password: "{{ vault_ansible_password }}"
+napalm_provider:
+  optional_args: { 'secret': "{{ vault_secret }}", 'global_delay_factor': 2 }
+  hostname: "{{ ansible_host }}"
+  username: "{{ ansible_user }}"
+  dev_os: "{{ ansible_network_os }}"
+  password: "{{ ansible_password }}"
+

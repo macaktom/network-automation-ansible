@@ -13,9 +13,22 @@
           filter: facts
         register: result
 
+      - name: Access result of command
+        set_fact:
+          result: "{{ result['ansible_facts']['napalm_facts'] }}"
+
+      - name: Insert vendor value (only Olive images - not specified)
+        set_fact:
+          result: "{{ result | default({}) | combine ({ 'vendor' : vendor | title }) }}"
+        when: image == "olive"
+
+      - name: Parse uptime
+        set_fact:
+          result: "{{ result | default({}) | combine ({ 'uptime' : '%H:%M:%S' | strftime(result['uptime'] - 3600 ) }) }}"
+
       - name: Print facts data
         debug:
-          msg: "{{ result['ansible_facts']['napalm_facts']  | to_nice_yaml }}"
+          msg: "{{ result | to_nice_yaml }}"
 
 - name: Show device running configuration
   hosts: network_devices

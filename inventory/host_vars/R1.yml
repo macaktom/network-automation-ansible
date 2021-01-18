@@ -1,4 +1,5 @@
 ---
+ansible_host: 10.10.10.2
 vendor: cisco
 dev_type: router
 image: "c7200"
@@ -232,3 +233,4 @@ delete_config:
                   area_number: 0
                 - name: FastEthernet0/1
                   area_number: 0
+ping_testing: [10.10.10.1, 10.10.10.2, 10.10.30.7]

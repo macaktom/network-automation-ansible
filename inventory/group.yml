@@ -1,27 +1,66 @@
----
-cisco:
-  platform: "ios"
-  username: "admin"
-  password: "automationDP"
-  connection_options:
-    napalm:
-      extras:
-        optional_args:
-          secret: "cisco"
-          auto_file_prompt: True
-          global_delay_factor: 1
-    netmiko:
-      extras:
-        secret: "cisco"
-        global_delay_factor: 1
+all:
+    hosts:
+        SW1:
+        R1:
+        R3:
+        Server1:
+    children:
+      network_devices:
+        children:
+            cisco:
+                children:
+                    cisco_switches:
+                        cisco_l3_switches:
+                          hosts:
+                            SW1:
+                    cisco_l3:
+                        children:
+                            cisco_routers:
+                              hosts:
+                                R1:
+                            cisco_l3_switches:
+                              hosts:
+                                SW1:
+                vars:
+                  ansible_python_interpreter: ~/.local/share/virtualenvs/network_automation_ansible-jyRQ_HBH/bin/python
+                  ansible_network_os: ios
+                  ansible_connection: network_cli
+                  ansible_user: admin
+                  ansible_password: automationDP
+                  napalm_provider:
+                    optional_args: { 'secret': cisco, 'global_delay_factor': 2 }
+                    hostname: "{{ ansible_host }}"
+                    username: "{{ ansible_user }}"
+                    dev_os: "{{ ansible_network_os }}"
+                    password: "{{ ansible_password }}"
 
-juniper:
-  platform: "junos"
-  username: "juniper"
-  password: "Juniper"
+            juniper:
+              children:
+                juniper_routers:
+                  children:
+                    juniper_olive:
+                      hosts:
+                        R3:
+              vars:
+                ansible_python_interpreter: ~/.local/share/virtualenvs/network_automation_ansible-jyRQ_HBH/bin/python
+                ansible_network_os: junos
+                ansible_connection: network_cli
+                ansible_user: juniper
+                ansible_password: Juniper
+                napalm_provider:
+                  hostname: "{{ ansible_host }}"
+                  username: "{{ ansible_user }}"
+                  dev_os: "{{ ansible_network_os }}"
+                  password: "{{ ansible_password }}"
 
-linux:
-  platform: "linux"
-  username: "linux"
-  password: "gns3DP"
-
+      linux:
+        children:
+          ubuntu_servers:
+            hosts:
+              Server1:
+          group_y:
+            hosts:
+              test6:
+        vars:
+          ansible_user: linux
+          ansible_password: gns3DP

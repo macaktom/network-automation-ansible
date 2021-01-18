@@ -1,4 +1,5 @@
 ---
+ansible_host: 10.10.10.4
 vendor: juniper
 dev_type: router
 image: "olive"
@@ -169,3 +170,4 @@ delete_config:
               - name: em1
                 unit_number: 1
                 filter_direction: output
+ping_testing: [10.10.10.1, 10.10.30.7]

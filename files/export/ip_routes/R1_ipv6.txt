@@ -1,21 +1,8 @@
-IPv6 Routing Table - default - 7 entries
+IPv6 Routing Table - default - 1 entries
 Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
        B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
        I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
-       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
-       NDr - Redirect, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+       EX - EIGRP external, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
        OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2, l - LISP
-C   2001:718:1::/64 [0/0]
-     via FastEthernet0/1, directly connected
-L   2001:718:1::1/128 [0/0]
-     via FastEthernet0/1, receive
-C   2001:BB9:AABB:1234::/64 [0/0]
-     via FastEthernet0/0, directly connected
-L   2001:BB9:AABB:1234:1111:2222:3333:4444/128 [0/0]
-     via FastEthernet0/0, receive
-L   2001:BB9:AABB:1234:C801:36FF:FE81:8/128 [0/0]
-     via FastEthernet0/0, receive
-LC  2001:DB8::1/128 [0/0]
-     via Loopback0, receive
 L   FF00::/8 [0/0]
      via Null0, receive

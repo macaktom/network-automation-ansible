@@ -39,82 +39,10 @@
 <h1>Packet counters tables</h1>
 <p>Devices:</p>
 <ul>
-    <li><a href=#R3>R3</a></li>
     <li><a href=#SW1>SW1</a></li>
+    <li><a href=#R3>R3</a></li>
+    <li><a href=#R1>R1</a></li>
 </ul>
-<h2 id=R3>R3</h2>
-<table>
-<thead>
-    <tr>
-        <th>interface</th>
-        <th>rx_broadcast_packets</th>
-        <th>rx_discards</th>
-        <th>rx_errors</th>
-        <th>rx_multicast_packets</th>
-        <th>rx_octets</th>
-        <th>rx_unicast_packets</th>
-        <th>tx_discards</th>
-        <th>tx_errors</th>
-        <th>tx_octets</th>
-        <th>tx_unicast_packets</th>
-    </tr>
-</thead>
-<tbody>
-<tr>
-    <td>em0</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>0</td>
-    <td>-1</td>
-    <td>135164</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>0</td>
-    <td>298767</td>
-    <td>-1</td>
-</tr>
-<tr>
-    <td>em1</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>0</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>0</td>
-    <td>682</td>
-    <td>-1</td>
-</tr>
-<tr>
-    <td>em2</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>0</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>0</td>
-    <td>640</td>
-    <td>-1</td>
-</tr>
-<tr>
-    <td>mtun</td>
-    <td>-1</td>
-    <td>-1</td>
-    <td>-1</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>-1</td>
-    <td>-1</td>
-    <td>-1</td>
-    <td>0</td>
-    <td>-1</td>
-</tr>
-</tbody>
-</table>
-    
 <h2 id=SW1>SW1</h2>
 <table>
 <thead>
@@ -135,29 +63,29 @@
 <tbody>
 <tr>
     <td>GigabitEthernet0/0</td>
-    <td>154</td>
+    <td>14</td>
     <td>0</td>
     <td>0</td>
     <td>0</td>
-    <td>51069</td>
-    <td>423</td>
+    <td>108080</td>
+    <td>1357</td>
     <td>0</td>
     <td>0</td>
-    <td>112361</td>
-    <td>865</td>
+    <td>210344</td>
+    <td>1493</td>
 </tr>
 <tr>
     <td>GigabitEthernet0/1</td>
-    <td>67</td>
+    <td>18</td>
     <td>0</td>
     <td>0</td>
-    <td>7</td>
-    <td>39748</td>
-    <td>320</td>
+    <td>8</td>
+    <td>9579</td>
+    <td>84</td>
     <td>0</td>
     <td>0</td>
-    <td>192697</td>
-    <td>2559</td>
+    <td>45031</td>
+    <td>565</td>
 </tr>
 <tr>
     <td>GigabitEthernet0/2</td>
@@ -169,8 +97,8 @@
     <td>0</td>
     <td>0</td>
     <td>0</td>
-    <td>194657</td>
-    <td>2577</td>
+    <td>45288</td>
+    <td>569</td>
 </tr>
 <tr>
     <td>GigabitEthernet0/3</td>
@@ -182,8 +110,8 @@
     <td>0</td>
     <td>0</td>
     <td>0</td>
-    <td>194657</td>
-    <td>2577</td>
+    <td>33841</td>
+    <td>345</td>
 </tr>
 <tr>
     <td>GigabitEthernet1/0</td>
@@ -221,8 +149,8 @@
     <td>0</td>
     <td>0</td>
     <td>0</td>
-    <td>0</td>
-    <td>0</td>
+    <td>427</td>
+    <td>1</td>
 </tr>
 <tr>
     <td>GigabitEthernet1/3</td>
@@ -329,7 +257,257 @@
     <td>0</td>
 </tr>
 <tr>
+    <td>Loopback0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
     <td>Vlan10</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+</tbody>
+</table>
+    
+<h2 id=R3>R3</h2>
+<table>
+<thead>
+    <tr>
+        <th>interface</th>
+        <th>rx_broadcast_packets</th>
+        <th>rx_discards</th>
+        <th>rx_errors</th>
+        <th>rx_multicast_packets</th>
+        <th>rx_octets</th>
+        <th>rx_unicast_packets</th>
+        <th>tx_discards</th>
+        <th>tx_errors</th>
+        <th>tx_octets</th>
+        <th>tx_unicast_packets</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td>em0</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>-1</td>
+    <td>233569</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>445122</td>
+    <td>-1</td>
+</tr>
+<tr>
+    <td>em1</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>8962</td>
+    <td>-1</td>
+</tr>
+<tr>
+    <td>em2</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>640</td>
+    <td>-1</td>
+</tr>
+<tr>
+    <td>mtun</td>
+    <td>-1</td>
+    <td>-1</td>
+    <td>-1</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>-1</td>
+    <td>-1</td>
+    <td>-1</td>
+    <td>0</td>
+    <td>-1</td>
+</tr>
+</tbody>
+</table>
+    
+<h2 id=R1>R1</h2>
+<table>
+<thead>
+    <tr>
+        <th>interface</th>
+        <th>rx_broadcast_packets</th>
+        <th>rx_discards</th>
+        <th>rx_errors</th>
+        <th>rx_multicast_packets</th>
+        <th>rx_octets</th>
+        <th>rx_unicast_packets</th>
+        <th>tx_discards</th>
+        <th>tx_errors</th>
+        <th>tx_octets</th>
+        <th>tx_unicast_packets</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td>Ethernet1/0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>114907</td>
+    <td>1378</td>
+    <td>0</td>
+    <td>0</td>
+    <td>171563</td>
+    <td>1368</td>
+</tr>
+<tr>
+    <td>Ethernet1/1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>Ethernet1/2</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>Ethernet1/3</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>Ethernet1/4</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>Ethernet1/5</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>Ethernet1/6</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>Ethernet1/7</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+</tr>
+<tr>
+    <td>FastEthernet0/0</td>
+    <td>534</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>38530</td>
+    <td>534</td>
+    <td>0</td>
+    <td>0</td>
+    <td>10925</td>
+    <td>90</td>
+</tr>
+<tr>
+    <td>FastEthernet0/1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>11308</td>
+    <td>91</td>
+</tr>
+<tr>
+    <td>Loopback0</td>
     <td>0</td>
     <td>0</td>
     <td>0</td>
