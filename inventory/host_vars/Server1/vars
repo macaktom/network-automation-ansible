@@ -1,0 +1,16 @@
+---
+ansible_host: 10.10.10.10
+vendor: debian
+dev_type: ubuntu_server
+vsftpd_config:
+  vsftpd_user:
+    name: ftpuser
+    password: "{{ vault_vsftpd_user_password | string | password_hash('sha512') }}"
+    groups: sudo,ftpuser
+    home: /home/ftpuser
+  ssl:
+    enabled: true
+    cert_file: /etc/certs/vsftpd_cert.pem
+    openssl_csr: /etc/ssl/private/vsftpd.csr
+    private_key_file: /etc/certs/vsftpd.pem
+    cn: 10.10.10.10

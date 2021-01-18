@@ -11,11 +11,13 @@
     certs_folder_path: '/etc/certs'
   tasks:
     - name: Ensure FTP group exists
+      tags: user
       group:
         name: "{{ vsftpd_config.vsftpd_user.name }}"
         state: present
 
     - name: Create FTP user
+      tags: user
       user:
         name: "{{ vsftpd_config.vsftpd_user.name }}"
         state: present

@@ -10,4 +10,3 @@ napalm_provider:
   username: "{{ ansible_user }}"
   dev_os: "{{ ansible_network_os }}"
   password: "{{ ansible_password }}"
-
