@@ -14,3 +14,21 @@ vsftpd_config:
     openssl_csr: /etc/ssl/private/vsftpd.csr
     private_key_file: /etc/certs/vsftpd.pem
     cn: 10.10.10.10
+
+influxdb_ip_address: 10.10.10.10
+influx_db_url: "http://{{ influxdb_ip_address }}:8086"
+grafana_url: http://10.10.10.10:3000
+
+grafana_data_sources:
+  - name: influxsourceAnsible
+    ds_type: "influxdb"
+    database: "{{ influxdb_ansible_database_name }}"
+    url: "{{ influx_db_url }}"
+    user: "{{ influxdb_admin_username }}"
+    password: "{{ influxdb_admin_password }}"
+  - name: influxsourceNornir
+    ds_type: "influxdb"
+    database: "{{ influxdb_nornir_database_name }}"
+    url: "{{ influx_db_url }}"
+    user: "{{ influxdb_admin_username }}"
+    password: "{{ influxdb_admin_password }}"
