@@ -1,0 +1,65 @@
+---
+- name: Get and Write NAPALM data to DB
+  hosts: network_devices
+  gather_facts: no
+  vars:
+    used_influxdb_ip_address: 10.10.10.10
+    used_influxdb_ansible_database_name: "monitoring_ansible"
+  tasks:
+    - name: Get env_details and device facts
+      napalm_get_facts:
+        provider: "{{ napalm_provider }}"
+        filter: environment,facts
+      register: result
+
+    - name: Get current UTC time
+      command: "date '+%Y-%m-%d %H:%M:%S'"
+      delegate_to: localhost
+      register: date_utc
+      environment:
+        TZ: UTC
+      run_once: yes
+
+    - name: Access HW details (except Olive)
+      set_fact:
+        cpu_usage: "{{ result['ansible_facts']['napalm_environment']['cpu']['0']['%usage'] }}"
+        memory_used: "{{ result['ansible_facts']['napalm_environment']['memory']['used_ram'] }}"
+        memory_available: "{{ result['ansible_facts']['napalm_environment']['memory']['available_ram'] }}"
+      when: image != "olive"
+
+    - name: Access facts (uptime)
+      set_fact:
+        uptime: "{{ result['ansible_facts']['napalm_facts']['uptime'] }}"
+
+    - name: Write HW details into DB
+      community.general.influxdb_write:
+        hostname: "{{ used_influxdb_ip_address }}"
+        database_name: "{{ used_influxdb_ansible_database_name }}"
+        data_points:
+          - measurement: hw_details
+            tags:
+              host: "{{ inventory_hostname }}"
+            time: "{{ date_utc.stdout }}"
+            fields:
+              cpu_usage: "{{ cpu_usage | float }}"
+              memory_used: "{{ memory_used | int }}"
+              memory_available: "{{ memory_available | int }}"
+      throttle: 1
+      when: cpu_usage is defined and memory_used is defined and memory_available is defined
+
+    - name: Write device facts into DB
+      community.general.influxdb_write:
+        hostname: "{{ used_influxdb_ip_address }}"
+        database_name: "{{ used_influxdb_ansible_database_name }}"
+        data_points:
+          - measurement: device_facts
+            tags:
+              host: "{{ inventory_hostname }}"
+            time: "{{ date_utc.stdout }}"
+            fields:
+              uptime: "{{ uptime | int }}"
+      throttle: 1
+      when: uptime is defined
+
+
+
