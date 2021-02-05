@@ -5,5 +5,6 @@ ansible_become_pass: "{{ vault_ansible_become_pass }}"
 
 influxdb_ansible_database_name: "monitoring_ansible"
 influxdb_nornir_database_name: "monitoring_nornir"
+influxdb_telegraf_database_name: "monitoring_telegraf"
 influxdb_admin_username: monitoring
 influxdb_admin_password: "{{ vault_influxdb_admin_password }}"

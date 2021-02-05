@@ -22,7 +22,7 @@
 
     - name: Access HW details (except Olive)
       set_fact:
-        cpu_usage: "{{ result['ansible_facts']['napalm_environment']['cpu']['0']['%usage'] }}"
+        cpu_usage: "{{ (result['ansible_facts']['napalm_environment']['cpu']['0']['%usage']) }}"
         memory_used: "{{ result['ansible_facts']['napalm_environment']['memory']['used_ram'] }}"
         memory_available: "{{ result['ansible_facts']['napalm_environment']['memory']['available_ram'] }}"
       when: image != "olive"
@@ -41,9 +41,9 @@
               host: "{{ inventory_hostname }}"
             time: "{{ date_utc.stdout }}"
             fields:
-              cpu_usage: "{{ cpu_usage | float }}"
-              memory_used: "{{ memory_used | int }}"
-              memory_available: "{{ memory_available | int }}"
+              cpu_usage: "{{ cpu_usage }}"
+              memory_used: '{{ memory_used }}'
+              memory_available: '{{ memory_available }}'
       throttle: 1
       when: cpu_usage is defined and memory_used is defined and memory_available is defined
 
@@ -57,7 +57,7 @@
               host: "{{ inventory_hostname }}"
             time: "{{ date_utc.stdout }}"
             fields:
-              uptime: "{{ uptime | int }}"
+              uptime: "{{ uptime }}"
       throttle: 1
       when: uptime is defined
 

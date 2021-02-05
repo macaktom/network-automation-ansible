@@ -1,0 +1,31 @@
+[global_tags]
+
+
+# Configuration for telegraf agent
+[agent]
+    interval = "20s"
+    debug = false
+    hostname = "{{ telegraf_ip_address }}"
+
+###############################################################################
+#                                  OUTPUTS                                    #
+###############################################################################
+
+[[outputs.influxdb]]
+    urls = ["{{ influx_db_url }}"]
+    database = "{{ influxdb_telegraf_database_name }}"
+    username = "{{ influxdb_admin_username }}"
+    password = "{{ influxdb_admin_password }}"
+
+###############################################################################
+#                                  INPUTS                                     #
+###############################################################################
+
+[[inputs.cpu]]
+percpu = true
+totalcpu = true
+collect_cpu_time = false
+
+[[inputs.mem]]
+
+[[inputs.system]]

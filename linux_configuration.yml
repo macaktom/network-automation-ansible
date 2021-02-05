@@ -121,7 +121,8 @@
     influx_repository: 'deb https://repos.influxdata.com/ubuntu bionic stable'
     grafana_gpg_key_url: 'https://packages.grafana.com/gpg.key'
     grafana_repository: 'deb https://packages.grafana.com/oss/deb stable main'
-
+    templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
+    telegraf_conf_path: '/etc/telegraf/telegraf.conf'
   tasks:
     - name: Import InfluxDB GPG signing key
       apt_key:
@@ -181,6 +182,7 @@
       with_items:
         - "{{ influxdb_ansible_database_name }}"
         - "{{ influxdb_nornir_database_name }}"
+        - "{{ influxdb_telegraf_database_name }}"
 
     - name: Install Grafana
       apt:
@@ -190,6 +192,28 @@
     - name: Enable Grafana during boot
       service:
         name: grafana-server
+        state: started
+        enabled: yes
+
+    - name: Install telegraf
+      apt:
+        name: telegraf
+        state: latest
+
+    - name: Parse telegraf template
+      template:
+        src: '{{ templates_folder }}/telegraf.j2'
+        dest: '{{ telegraf_conf_path }}'
+        owner: root
+        group: root
+        mode: 0644
+        force: yes
+      notify:
+        - restart telegraf
+
+    - name: Enable telegraf agent during boot
+      service:
+        name: telegraf
         state: started
         enabled: yes
 
@@ -204,3 +228,9 @@
         password: "{{ item.password }}"
         state: present
       with_items: "{{ grafana_data_sources }}"
+
+  handlers:
+    - name: restart telegraf
+      service:
+        name: telegraf
+        state: restarted

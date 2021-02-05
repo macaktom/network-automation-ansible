@@ -2,7 +2,7 @@
 ansible_host: 10.10.10.10
 vendor: debian
 dev_type: ubuntu_server
-vsftpd_config:
+vsftpd_config: # vsftpd konfigurace, nepovinné fieldy: ssl
   vsftpd_user:
     name: ftpuser
     password: "{{ vault_vsftpd_user_password | string | password_hash('sha512') }}"
@@ -15,11 +15,12 @@ vsftpd_config:
     private_key_file: /etc/certs/vsftpd.pem
     cn: 10.10.10.10
 
+telegraf_ip_address: 10.10.10.10
 influxdb_ip_address: 10.10.10.10
 influx_db_url: "http://{{ influxdb_ip_address }}:8086"
 grafana_url: http://10.10.10.10:3000
 
-grafana_data_sources:
+grafana_data_sources: # definování zdrojů dat pro Grafanu
   - name: influxsourceAnsible
     ds_type: "influxdb"
     database: "{{ influxdb_ansible_database_name }}"
@@ -29,6 +30,12 @@ grafana_data_sources:
   - name: influxsourceNornir
     ds_type: "influxdb"
     database: "{{ influxdb_nornir_database_name }}"
+    url: "{{ influx_db_url }}"
+    user: "{{ influxdb_admin_username }}"
+    password: "{{ influxdb_admin_password }}"
+  - name: influxsourceTelegraf
+    ds_type: "influxdb"
+    database: "{{ influxdb_telegraf_database_name }}"
     url: "{{ influx_db_url }}"
     user: "{{ influxdb_admin_username }}"
     password: "{{ influxdb_admin_password }}"
