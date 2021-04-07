@@ -1,5 +1,5 @@
 - name: IPv4 EIGRP configuration
-  hosts: cisco_l3
+  hosts: R3,MLS1
   connection: local
   gather_facts: no
   tags: ipv4
@@ -40,6 +40,7 @@
           state: absent
           path: "{{ staging_eigrp_folder }}"
         check_mode: no
+        run_once: true
 
       - name: Print differences in configs
         debug:
@@ -47,7 +48,7 @@
       when: eigrp_config is defined
 
 - name: IPv6 EIGRP configuration
-  hosts: cisco_l3
+  hosts: R3,MLS1
   connection: local
   gather_facts: no
   tags: ipv6
@@ -88,6 +89,7 @@
           state: absent
           path: "{{ staging_eigrp_folder }}"
         check_mode: no
+        run_once: true
 
       - name: Print differences in configs
         debug:

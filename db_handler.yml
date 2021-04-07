@@ -3,7 +3,7 @@
   hosts: network_devices
   gather_facts: no
   vars:
-    used_influxdb_ip_address: 10.10.10.10
+    used_influxdb_ip_address: 10.10.10.6
     used_influxdb_ansible_database_name: "monitoring_ansible"
   tasks:
     - name: Get env_details and device facts
@@ -60,6 +60,3 @@
               uptime: "{{ uptime }}"
       throttle: 1
       when: uptime is defined
-
-
-

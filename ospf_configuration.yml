@@ -1,12 +1,12 @@
 - name: OSPFv2 configuration
-  hosts: routers, cisco_l3
+  hosts: routers
   connection: local
   gather_facts: no
   tags: ipv4
   vars:
     templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
     staging_ospf_folder: 'files/staging/ospf'
-    parsed_ospf_configuration_file: '{{ staging_ospf_folder }}/{{ inventory_hostname }}.conf'
+    parsed_ospf_conf_file: '{{ staging_ospf_folder }}/{{ inventory_hostname }}.conf'
     commit_config: true
   tasks:
     - block:
@@ -24,13 +24,13 @@
       - name: Parse ospf_ipv4 template
         template:
           src: '{{ templates_folder }}/ospf_ipv4.j2'
-          dest: '{{ parsed_ospf_configuration_file }}'
+          dest: '{{ parsed_ospf_conf_file }}'
         check_mode: no
 
       - name: Load and commit configuration
         napalm_install_config:
           provider: "{{ napalm_provider }}"
-          config_file: '{{ parsed_ospf_configuration_file }}'
+          config_file: '{{ parsed_ospf_conf_file }}'
           replace_config: false
           commit_changes: "{{ commit_config }}"
         register: result
@@ -54,7 +54,7 @@
   vars:
     templates_folder: 'templates/{{ vendor }}/{{ dev_type }}'
     staging_ospf_folder: 'files/staging/ospf'
-    parsed_ospf_configuration_file: '{{ staging_ospf_folder }}/{{ inventory_hostname }}.conf'
+    parsed_ospf_conf_file: '{{ staging_ospf_folder }}/{{ inventory_hostname }}.conf'
     commit_config: true
   tasks:
     - block:
@@ -72,13 +72,13 @@
       - name: Parse ospfv3 template
         template:
           src: '{{ templates_folder }}/ospfv3.j2'
-          dest: '{{ parsed_ospf_configuration_file }}'
+          dest: '{{ parsed_ospf_conf_file }}'
         check_mode: no
 
       - name: Load and commit configuration
         napalm_install_config:
           provider: "{{ napalm_provider }}"
-          config_file: '{{ parsed_ospf_configuration_file }}'
+          config_file: '{{ parsed_ospf_conf_file }}'
           replace_config: false
           commit_changes: "{{ commit_config }}"
         register: result

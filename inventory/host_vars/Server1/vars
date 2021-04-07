@@ -1,5 +1,5 @@
 ---
-ansible_host: 10.10.10.10
+ansible_host: 10.10.10.6
 vendor: debian
 dev_type: ubuntu_server
 vsftpd_config: # vsftpd konfigurace, nepovinné fieldy: ssl
@@ -13,12 +13,12 @@ vsftpd_config: # vsftpd konfigurace, nepovinné fieldy: ssl
     cert_file: /etc/certs/vsftpd_cert.pem
     openssl_csr: /etc/ssl/private/vsftpd.csr
     private_key_file: /etc/certs/vsftpd.pem
-    cn: 10.10.10.10
+    cn: "{{ ansible_host }}"
 
-telegraf_ip_address: 10.10.10.10
-influxdb_ip_address: 10.10.10.10
-influx_db_url: "http://{{ influxdb_ip_address }}:8086"
-grafana_url: http://10.10.10.10:3000
+telegraf_ip_address: "{{ ansible_host }}"
+influxdb_ip_address: "{{ ansible_host }}"
+influx_db_url: "http://{{ ansible_host }}:8086"
+grafana_url: "http://{{ ansible_host }}:3000"
 
 grafana_data_sources: # definování zdrojů dat pro Grafanu
   - name: influxsourceAnsible

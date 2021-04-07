@@ -5,6 +5,7 @@
 ansible_host: 10.10.10.10
 vendor: debian
 dev_type: ubuntu_server
+
 vsftpd_config: # vsftpd konfigurace, nepovinné fieldy: ssl
   vsftpd_user:
     name: ftpuser

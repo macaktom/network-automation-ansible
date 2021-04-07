@@ -1,3 +1,9 @@
+Extended IP access list VLAN30in
+    10 deny ip 192.168.30.0 0.0.0.255 192.168.40.0 0.0.0.255
+    20 permit ip any any
+Extended IP access list VLAN40in
+    10 deny ip 192.168.40.0 0.0.0.255 192.168.30.0 0.0.0.255 (3 matches)
+    20 permit ip any any (14 matches)
 Extended IP access list preauth_ipv4_acl (per-user)
     10 permit udp any any eq domain
     20 permit tcp any any eq domain
@@ -5,6 +11,12 @@ Extended IP access list preauth_ipv4_acl (per-user)
     40 permit udp any any eq bootpc
     50 permit udp any eq bootpc any
     60 deny ip any any
+IPv6 access list VLAN30-in
+    deny ipv6 2001:DB8:1001:30::/64 2001:DB8:1001:40::/64 sequence 10
+    permit ipv6 any any (8 matches) sequence 20
+IPv6 access list VLAN40-in
+    deny ipv6 2001:DB8:1001:40::/64 2001:DB8:1001:30::/64 sequence 10
+    permit ipv6 any any sequence 20
 IPv6 access list preauth_ipv6_acl (per-user)
     permit udp any any eq domain sequence 10
     permit tcp any any eq domain sequence 20

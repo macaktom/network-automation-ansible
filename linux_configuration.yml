@@ -1,6 +1,6 @@
 ---
-- name: Setup and Configure (S)FTP server
-  hosts: ubuntu_servers
+- name: Setup and Configure FTPS server
+  hosts: Server1
   gather_facts: no
   become: yes
   tags: vsftpd
@@ -111,7 +111,7 @@
         name: vsftpd
         state: restarted
 
-- name: Setup InfluxDB and Grafana
+- name: Setup TIG Stack
   hosts: ubuntu_servers
   gather_facts: yes
   become: yes
@@ -129,14 +129,14 @@
         url: "{{ influx_gpg_key_url }}"
         state: present
 
-    - name: Add InfluxDB repository
-      apt_repository:
-        repo: "{{ influx_repository }}"
-        state: present
-
     - name: Import Grafana GPG signing key
       apt_key:
         url: "{{ grafana_gpg_key_url }}"
+        state: present
+
+    - name: Add InfluxDB repository
+      apt_repository:
+        repo: "{{ influx_repository }}"
         state: present
 
     - name: Add Grafana repository
@@ -200,6 +200,12 @@
         name: telegraf
         state: latest
 
+    - name: Enable telegraf agent during boot
+      service:
+        name: telegraf
+        state: started
+        enabled: yes
+
     - name: Parse telegraf template
       template:
         src: '{{ templates_folder }}/telegraf.j2'
@@ -210,12 +216,6 @@
         force: yes
       notify:
         - restart telegraf
-
-    - name: Enable telegraf agent during boot
-      service:
-        name: telegraf
-        state: started
-        enabled: yes
 
     - name: Create influxdb datasources # použítí defaultního Grafana API uživatele (admin)
       community.grafana.grafana_datasource:

@@ -177,7 +177,7 @@
       when: image != "olive"
 
 - name: Show configured VLANs
-  hosts: cisco_switches
+  hosts: cisco_l3_switches
   connection: local
   gather_facts: no
   tags:

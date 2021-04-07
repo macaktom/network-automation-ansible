@@ -9,7 +9,7 @@
     - block:
       - name: Get timestamp from local system
         shell: "date +%Y-%m-%d%H-%M-%S"
-        register: tstamp
+        register: timestamp
 
       - name: Get device running configuration
         napalm_get_facts:
@@ -25,4 +25,4 @@
       - name: Write content to backups folder
         copy:
           content: "{{ result['ansible_facts']['napalm_config']['running'] }}"
-          dest: '{{ backups_folder }}/{{ inventory_hostname }}_{{ tstamp.stdout[0:10] }}.conf'
+          dest: '{{ backups_folder }}/{{ inventory_hostname }}_{{ timestamp.stdout[0:10] }}.conf'
