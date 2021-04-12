@@ -142,13 +142,13 @@ delete_config:
           - number: 1
             routed_interfaces: [ Vlan30,Vlan40,Vlan50, GigabitEthernet0/1 ]
   packet_filter_ipv6_config:
-      Vlan30in:
+      Vlan30-in:
           routed_interfaces:
               - name: Vlan30
-                acl_direction: out
-      Vlan40in:
+                acl_direction: in
+      Vlan40-in:
          routed_interfaces:
               - name: Vlan40
-                acl_direction: out
+                acl_direction: in
   vlans_config:
       numbers: [30, 40, 50]

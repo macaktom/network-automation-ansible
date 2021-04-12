@@ -6455,3 +6455,154 @@ See the timeout setting options in the Network Debug and Troubleshooting Guide.
 2021-04-07 15:28:43,986 p=52058 u=macaktom n=ansible | shutdown complete
 2021-04-07 15:28:43,987 p=52053 u=macaktom n=ansible | shutdown complete
 2021-04-07 15:28:43,987 p=52042 u=macaktom n=ansible | shutdown complete
+2021-04-08 09:22:15,197 p=10977 u=macaktom n=ansible | PLAY [Deletion of network devices configuration] *************************************************************************************************************************************************************
+2021-04-08 09:22:15,234 p=10977 u=macaktom n=ansible | TASK [Create folders for parsed delete commands] *************************************************************************************************************************************************************
+2021-04-08 09:22:16,014 p=10986 u=macaktom n=ansible | network_os is set to ios
+2021-04-08 09:22:16,028 p=10984 u=macaktom n=ansible | network_os is set to ios
+2021-04-08 09:22:16,028 p=10985 u=macaktom n=ansible | network_os is set to ios
+2021-04-08 09:22:16,041 p=10987 u=macaktom n=ansible | network_os is set to junos
+2021-04-08 09:22:16,440 p=10977 u=macaktom n=ansible | changed: [MLS1]
+2021-04-08 09:22:16,444 p=10977 u=macaktom n=ansible | ok: [R3]
+2021-04-08 09:22:16,444 p=10977 u=macaktom n=ansible | ok: [R1]
+2021-04-08 09:22:16,445 p=10977 u=macaktom n=ansible | ok: [R2]
+2021-04-08 09:22:16,450 p=10977 u=macaktom n=ansible | TASK [Set no conf commit variable (enable testing mode)] *****************************************************************************************************************************************************
+2021-04-08 09:22:16,497 p=10977 u=macaktom n=ansible | skipping: [R1]
+2021-04-08 09:22:16,501 p=10977 u=macaktom n=ansible | skipping: [R3]
+2021-04-08 09:22:16,505 p=10977 u=macaktom n=ansible | skipping: [MLS1]
+2021-04-08 09:22:16,515 p=10977 u=macaktom n=ansible | skipping: [R2]
+2021-04-08 09:22:16,523 p=10977 u=macaktom n=ansible | TASK [Parse delete_configuration template] *******************************************************************************************************************************************************************
+2021-04-08 09:22:17,247 p=10977 u=macaktom n=ansible | fatal: [R3]: FAILED! => changed=false 
+  msg: 'AnsibleUndefinedVariable: ''dict object'' has no attribute ''interfaces'''
+2021-04-08 09:22:17,972 p=10977 u=macaktom n=ansible | changed: [MLS1]
+2021-04-08 09:22:17,974 p=10977 u=macaktom n=ansible | changed: [R1]
+2021-04-08 09:22:17,974 p=10977 u=macaktom n=ansible | changed: [R2]
+2021-04-08 09:22:17,980 p=10977 u=macaktom n=ansible | TASK [Load and commit configuration] *************************************************************************************************************************************************************************
+2021-04-08 09:22:22,962 p=10977 u=macaktom n=ansible | fatal: [R2]: FAILED! => changed=false 
+  msg: 'cannot connect to device: None'
+2021-04-08 09:22:47,121 p=11002 u=macaktom n=ansible | persistent connection idle timeout triggered, timeout value is 30 secs.
+See the timeout setting options in the Network Debug and Troubleshooting Guide.
+2021-04-08 09:22:47,224 p=11002 u=macaktom n=ansible | shutdown complete
+2021-04-08 09:22:48,615 p=11001 u=macaktom n=ansible | persistent connection idle timeout triggered, timeout value is 30 secs.
+See the timeout setting options in the Network Debug and Troubleshooting Guide.
+2021-04-08 09:22:48,615 p=11008 u=macaktom n=ansible | persistent connection idle timeout triggered, timeout value is 30 secs.
+See the timeout setting options in the Network Debug and Troubleshooting Guide.
+2021-04-08 09:22:48,615 p=11005 u=macaktom n=ansible | persistent connection idle timeout triggered, timeout value is 30 secs.
+See the timeout setting options in the Network Debug and Troubleshooting Guide.
+2021-04-08 09:22:48,717 p=11005 u=macaktom n=ansible | shutdown complete
+2021-04-08 09:22:48,717 p=11001 u=macaktom n=ansible | shutdown complete
+2021-04-08 09:22:48,717 p=11008 u=macaktom n=ansible | shutdown complete
+2021-04-08 09:22:51,031 p=10977 u=macaktom n=ansible | changed: [MLS1]
+2021-04-08 09:23:46,621 p=10977 u=macaktom n=ansible | fatal: [R1]: FAILED! => changed=false 
+  msg: 'cannot install config: Search pattern never detected in send_command: R1\#'
+2021-04-08 09:23:46,627 p=10977 u=macaktom n=ansible | TASK [Clean temporary folders/files] *************************************************************************************************************************************************************************
+2021-04-08 09:23:47,320 p=11376 u=macaktom n=ansible | network_os is set to ios
+2021-04-08 09:23:47,526 p=10977 u=macaktom n=ansible | changed: [MLS1]
+2021-04-08 09:23:47,534 p=10977 u=macaktom n=ansible | TASK [Print differences in configs] **************************************************************************************************************************************************************************
+2021-04-08 09:23:48,140 p=10977 u=macaktom n=ansible | ok: [MLS1] => 
+  msg: |-
+    changed: true
+    failed: false
+    msg: |-
+        -no router eigrp 1
+        +interface Vlan30
+        - no ip access-group Vlan30in in
+        -no ip access-list extended Vlan30in
+        +interface Vlan40
+        - no ip access-group Vlan40in in
+        -no ip access-list extended Vlan40in
+        +interface Vlan30
+        - no ipv6 traffic-filter Vlan30in out
+        -no ipv6 access-list Vlan30in
+        +interface Vlan40
+        - no ipv6 traffic-filter Vlan40in out
+        -no ipv6 access-list Vlan40in
+        +interface Vlan30
+        - no ipv6 eigrp 1
+        +interface Vlan40
+        - no ipv6 eigrp 1
+        +interface Vlan50
+        - no ipv6 eigrp 1
+        +interface GigabitEthernet0/1
+        - no ipv6 eigrp 1
+        -no ipv6 router eigrp 1
+        -no vlan 30
+        -no vlan 40
+        -no vlan 50
+        -no interface Vlan30
+        -no interface Vlan40
+        -no interface Vlan50
+        +default interface GigabitEthernet0/1
+        +default interface GigabitEthernet0/2
+        +default interface GigabitEthernet0/3
+        +default interface GigabitEthernet1/0
+2021-04-08 09:23:48,150 p=10977 u=macaktom n=ansible | PLAY RECAP ***************************************************************************************************************************************************************************************************
+2021-04-08 09:23:48,150 p=10977 u=macaktom n=ansible | MLS1                       : ok=5    changed=4    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2021-04-08 09:23:48,150 p=10977 u=macaktom n=ansible | R1                         : ok=2    changed=1    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   
+2021-04-08 09:23:48,151 p=10977 u=macaktom n=ansible | R2                         : ok=2    changed=1    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   
+2021-04-08 09:23:48,151 p=10977 u=macaktom n=ansible | R3                         : ok=1    changed=0    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0   
+2021-04-08 09:23:48,250 p=11381 u=macaktom n=ansible | shutdown complete
+2021-04-08 16:38:06,386 p=41472 u=macaktom n=ansible | PLAY [Show device basic facts] *******************************************************************************************************************************************************************************
+2021-04-08 16:38:06,436 p=41472 u=macaktom n=ansible | PLAY [Show device running configuration] *********************************************************************************************************************************************************************
+2021-04-08 16:38:06,453 p=41472 u=macaktom n=ansible | PLAY [Show HW usage] *****************************************************************************************************************************************************************************************
+2021-04-08 16:38:06,470 p=41472 u=macaktom n=ansible | PLAY [Show interfaces basic info] ****************************************************************************************************************************************************************************
+2021-04-08 16:38:06,485 p=41472 u=macaktom n=ansible | PLAY [Show IP addresses assigned to interfaces] **************************************************************************************************************************************************************
+2021-04-08 16:38:06,502 p=41472 u=macaktom n=ansible | PLAY [Show interfaces packet counters] ***********************************************************************************************************************************************************************
+2021-04-08 16:38:06,515 p=41472 u=macaktom n=ansible | PLAY [Show NTP info (servers, peers, statistics)] ************************************************************************************************************************************************************
+2021-04-08 16:38:06,530 p=41472 u=macaktom n=ansible | PLAY [Show SNMP info] ****************************************************************************************************************************************************************************************
+2021-04-08 16:38:06,547 p=41472 u=macaktom n=ansible | PLAY [Show created users on device] **************************************************************************************************************************************************************************
+2021-04-08 16:38:06,563 p=41472 u=macaktom n=ansible | PLAY [Show configured VLANs] *********************************************************************************************************************************************************************************
+2021-04-08 16:38:06,598 p=41472 u=macaktom n=ansible | TASK [Get configured VLANs] **********************************************************************************************************************************************************************************
+2021-04-08 16:38:07,289 p=41486 u=macaktom n=ansible | network_os is set to ios
+2021-04-08 16:38:24,628 p=41472 u=macaktom n=ansible | ok: [MLS1]
+2021-04-08 16:38:24,635 p=41472 u=macaktom n=ansible | TASK [Print configured VLANs] ********************************************************************************************************************************************************************************
+2021-04-08 16:38:25,265 p=41472 u=macaktom n=ansible | ok: [MLS1] => 
+  msg: |-
+    ansible_facts:
+        napalm_vlans:
+            '1':
+                interfaces:
+                - GigabitEthernet1/1
+                - GigabitEthernet1/2
+                - GigabitEthernet1/3
+                - GigabitEthernet2/0
+                - GigabitEthernet2/1
+                - GigabitEthernet2/2
+                - GigabitEthernet2/3
+                - GigabitEthernet3/0
+                - GigabitEthernet3/1
+                - GigabitEthernet3/2
+                name: default
+            '1002':
+                interfaces: []
+                name: fddi-default
+            '1003':
+                interfaces: []
+                name: token-ring-default
+            '1004':
+                interfaces: []
+                name: fddinet-default
+            '1005':
+                interfaces: []
+                name: trnet-default
+            '30':
+                interfaces:
+                - GigabitEthernet0/2
+                name: VLAN30
+            '40':
+                interfaces:
+                - GigabitEthernet0/3
+                name: VLAN40
+            '50':
+                interfaces:
+                - GigabitEthernet1/0
+                name: VLAN50
+    changed: false
+    failed: false
+2021-04-08 16:38:25,277 p=41472 u=macaktom n=ansible | PLAY [Show OSPFv2 neighbors] *********************************************************************************************************************************************************************************
+2021-04-08 16:38:25,298 p=41472 u=macaktom n=ansible | PLAY [Show OSPFv3 neighbors] *********************************************************************************************************************************************************************************
+2021-04-08 16:38:25,315 p=41472 u=macaktom n=ansible | PLAY [Show IPv4 routes] **************************************************************************************************************************************************************************************
+2021-04-08 16:38:25,330 p=41472 u=macaktom n=ansible | PLAY [Show IPv6 routes] **************************************************************************************************************************************************************************************
+2021-04-08 16:38:25,350 p=41472 u=macaktom n=ansible | PLAY [Show packet filters info] ******************************************************************************************************************************************************************************
+2021-04-08 16:38:25,365 p=41472 u=macaktom n=ansible | PLAY RECAP ***************************************************************************************************************************************************************************************************
+2021-04-08 16:38:25,365 p=41472 u=macaktom n=ansible | MLS1                       : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2021-04-08 16:38:25,376 p=41491 u=macaktom n=ansible | shutdown complete

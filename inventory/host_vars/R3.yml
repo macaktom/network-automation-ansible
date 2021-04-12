@@ -108,5 +108,3 @@ delete_config:
               interfaces:
                 - name: FastEthernet0/0
                   area_number: 0
-                - name: FastEthernet0/1
-                  area_number: 0
