@@ -99,7 +99,7 @@ delete_config:
     eigrp_ipv6_config:
       AS:
         - number: 1
-          routed_interfaces: [ FastEthernet0/1 ]
+          interfaces: [ FastEthernet0/1 ]
     ospf_config:
         processes: [1]
     ospfv3_config:
